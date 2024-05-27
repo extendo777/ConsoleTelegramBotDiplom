@@ -120,6 +120,9 @@
   <data name="DBConnection" xml:space="preserve">
     <value>Data Source=АНТОН-ПК\FIERY;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;</value>
   </data>
+  <data name="String1" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="Token" xml:space="preserve">
     <value>6567190149:AAENEJ6_5IV39QqsP9OhbQfl-LBqLWHtb4s</value>
   </data>
