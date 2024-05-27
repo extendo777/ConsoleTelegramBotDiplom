@@ -61,7 +61,7 @@ namespace ConsoleTelegramBot.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 123.
+        ///   Ищет локализованную строку, похожую на 6567190149:AAENEJ6_5IV39QqsP9OhbQfl-LBqLWHtb4s.
         /// </summary>
         internal static string Token {
             get {

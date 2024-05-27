@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "7juyTRpnPirDlSLxl6VhoeeeHRgmSGmauQRhxXXxPJYXV51eXZotLEPpsoBm1T6rdKsLKFdUqfl02W2AiER/Eg==",
+  "dgSpecHash": "r8bzq0za6tqLHhpb3u9oWuX0uHm7nzEDbx7Uzi9CGEkGq8Jn+JeijE0ADoqivO68kWCpfPSRR/ZDkNOUpKqtkA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Паокин\\Desktop\\Задание\\ConsoleTelegramBot\\ConsoleTelegramBot.csproj",
+  "projectFilePath": "C:\\Users\\azale\\source\\repos\\ConsoleTelegramBotForApplicants\\ConsoleTelegramBot.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Паокин\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
-    "C:\\Users\\Паокин\\.nuget\\packages\\telegram.bot\\19.0.0\\telegram.bot.19.0.0.nupkg.sha512"
+    "C:\\Users\\azale\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\azale\\.nuget\\packages\\telegram.bot\\19.0.0\\telegram.bot.19.0.0.nupkg.sha512"
   ],
   "logs": []
 }

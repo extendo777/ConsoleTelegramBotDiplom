@@ -37,6 +37,80 @@ internal class Program
     }
     private static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
+        await HandleMessagesAsync(botClient, update, cancellationToken);
+        await HandleCallBackDataAsync(botClient, update, cancellationToken);
+
+    }
+    private static async Task HandleCallBackDataAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        if (update == null || update.CallbackQuery == null)
+            return;
+
+        long chatId = update.CallbackQuery.Message!.Chat.Id;
+        switch (update.CallbackQuery.Data)
+        {
+            case "start1":
+                InlineKeyboardMarkup inlineKeyboard = new(new[]
+                {
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Привет",
+                            callbackData: "level2_1"),
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "пока",
+                            callbackData: "level2_2"),
+                    },
+                });
+
+                await botClient.SendTextMessageAsync(
+                     chatId: chatId,
+                     text: "Выберите",
+                     replyMarkup: inlineKeyboard,
+                     cancellationToken: cancellationToken);
+                break;
+            case "start2":
+                await botClient.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: "Как дела?",
+                    cancellationToken: cancellationToken);
+                break;
+            case "start3":
+                await botClient.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: "Как дела?",
+                    cancellationToken: cancellationToken);
+                break;
+           
+            case "level3_1":
+                await botClient.SendTextMessageAsync(
+                     chatId: chatId,
+                     text: "level3_1",
+                     cancellationToken: cancellationToken);
+                break;
+            case "level3_2":
+                await botClient.SendTextMessageAsync(
+                     chatId: chatId,
+                     text: "level3_2",
+                     cancellationToken: cancellationToken);
+                break;
+            case "level3_3":
+                await botClient.SendTextMessageAsync(
+                     chatId: chatId,
+                     text: "level3_3",
+                     cancellationToken: cancellationToken);
+                break;
+            default:
+                await botClient.SendTextMessageAsync(
+                     chatId: chatId,
+                     text: "Кнопка не обработана",
+                     cancellationToken: cancellationToken);
+                break;
+
+        }
+    }
+    private static async Task HandleMessagesAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
         if (update.Message is not { } message)
             return;
         if (message.Text is not { } messageText)
@@ -46,102 +120,78 @@ internal class Program
 
         if (message.Text == "/start")
         {
-            InlineKeyboardMarkup inlineKeyboard = new(new[]
-            {
-                new []
-                {
-                    InlineKeyboardButton.WithUrl(
-                        text: "Dota 2",
-                        url: "https://www.dota2.com/home"),
-                    InlineKeyboardButton.WithUrl(
-                        text: "Minecraft",
-                        url: "https://www.minecraft.net/ru-ru"),
-                },
-                new []
-                {
-                    InlineKeyboardButton.WithUrl(
-                        text: "Yandex",
-                        url: "https://ya.ru/"),
-                    InlineKeyboardButton.WithUrl(
-                        text: "StackOverFlow",
-                        url: "https://stackoverflow.com/"),
-                },
-                 new []
-                {
-                    InlineKeyboardButton.WithUrl(
-                        text: "Мануал о создании",
-                        url: "https://telegrambots.github.io/book/index.html"),
-                    InlineKeyboardButton.WithUrl(
-                        text: "О нас",
-                        url: "https://1-mok.mskobr.ru/postuplenie-v-kolledzh/priemnaya-komissiya"),
-                },
-            });
-
-           await botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: "Выберите ссылку",
-                replyMarkup: inlineKeyboard,
-                cancellationToken: cancellationToken);
-
 
             ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
             {
-                new KeyboardButton[] { "Dota 2", "Minecraft" },
-                new KeyboardButton[] { "Yandex", "StackOverFlow" },
-                new KeyboardButton[] { "Мануал о создании", "О нас" },
+                new KeyboardButton[] { "📂Каталог", "🛍Корзина" },
+                new KeyboardButton[] { "📦Заказы", "📣Новости" },
+                new KeyboardButton[] { "⚙Настройки", "❓Помощь" },
             });
 
-           await botClient.SendTextMessageAsync(
+            await botClient.SendTextMessageAsync(
                 chatId: chatId,
-                text: "Добавление кнопок",
+                text: "Выберите действие",
                 replyMarkup: replyKeyboardMarkup,
                 cancellationToken: cancellationToken);
             return;
         }
         switch (message.Text)
         {
-            case "Dota 2":
+            case "📂Каталог":
+                InlineKeyboardMarkup inlineKeyboard = new(new[]
+                {
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Джинсы",
+                            callbackData: "start1"),
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Футболки",
+                            callbackData: "start2"),
+                    },
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Кроссовки",
+                            callbackData: "start3"),
+                    },
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Аксессуары",
+                            callbackData: "start4"),
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Сумки",
+                            callbackData: "start5"),
+                    },
+                });
+
                 await botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: "https://www.dota2.com/home",
-                cancellationToken: cancellationToken);
+                     chatId: chatId,
+                     text: "Выберите раздел, чтобы вывести список товаров:",
+                     replyMarkup: inlineKeyboard,
+                     cancellationToken: cancellationToken);
+
                 break;
-            case "Minecraft":
+            case "❓Помощь":
                 await botClient.SendTextMessageAsync(
-                  chatId: chatId,
-                  text: "https://www.minecraft.net/ru-ru",
-                  cancellationToken: cancellationToken);
+                    chatId: chatId,
+                    text: "Список команд:\n" +
+                    "/catalog - Каталог\n" +
+                    "/cart — Корзина\n" +
+                    "/history — История заказов\n" +
+                    "/news — Наши новости и акции\n" +
+                    "/settings — Настройки\r\n" +
+                    "/help — Справка\r\n" +
+                    "/about — О проекте\r\n" +
+                    "/start — Главное меню\r\n" +
+                    "/off — Выключить подписку на бота\r\n" +
+                    "/on — Включить подписку на бота\r\n" +
+                    " \r\n" +
+                    "Выберите ниже раздел справки и получите краткую помощь. Если Ваш вопрос не решен, обратитесь за помощью к живому оператору @f1nessef1nesse_33 \r\n", 
+                    cancellationToken: cancellationToken);
                 break;
-            case "Yandex":
-                await botClient.SendTextMessageAsync(
-                  chatId: chatId,
-                  text: "https://ya.ru/",
-                  cancellationToken: cancellationToken);
-                break;
-            case "StackOverFlow":
-                await botClient.SendTextMessageAsync(
-                  chatId: chatId,
-                  text: "https://stackoverflow.com/",
-                  cancellationToken: cancellationToken);
-                break;
-            case "Мануал о создании":
-                await botClient.SendTextMessageAsync(
-                  chatId: chatId,
-                  text: "https://telegrambots.github.io/book/index.html",
-                  cancellationToken: cancellationToken);
-                break;
-            case "О нас":
-                await botClient.SendTextMessageAsync(
-                  chatId: chatId,
-                  text: "https://1-mok.mskobr.ru/postuplenie-v-kolledzh/priemnaya-komissiya",
-                  cancellationToken: cancellationToken);
-                break;
-            default:
-                await botClient.SendTextMessageAsync(
-                  chatId: chatId,
-                  text: "Сообщене не распознано",
-                  cancellationToken: cancellationToken);
-                break;
+                
         }
     }
 

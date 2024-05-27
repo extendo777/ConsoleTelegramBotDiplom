@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Паокин\\Desktop\\Задание\\ConsoleTelegramBot\\ConsoleTelegramBot.csproj": {}
+    "C:\\Users\\azale\\source\\repos\\ConsoleTelegramBotForApplicants\\ConsoleTelegramBot.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Паокин\\Desktop\\Задание\\ConsoleTelegramBot\\ConsoleTelegramBot.csproj": {
+    "C:\\Users\\azale\\source\\repos\\ConsoleTelegramBotForApplicants\\ConsoleTelegramBot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Паокин\\Desktop\\Задание\\ConsoleTelegramBot\\ConsoleTelegramBot.csproj",
+        "projectUniqueName": "C:\\Users\\azale\\source\\repos\\ConsoleTelegramBotForApplicants\\ConsoleTelegramBot.csproj",
         "projectName": "ConsoleTelegramBot",
-        "projectPath": "C:\\Users\\Паокин\\Desktop\\Задание\\ConsoleTelegramBot\\ConsoleTelegramBot.csproj",
-        "packagesPath": "C:\\Users\\Паокин\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Паокин\\Desktop\\Задание\\ConsoleTelegramBot\\obj\\",
+        "projectPath": "C:\\Users\\azale\\source\\repos\\ConsoleTelegramBotForApplicants\\ConsoleTelegramBot.csproj",
+        "packagesPath": "C:\\Users\\azale\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\azale\\source\\repos\\ConsoleTelegramBotForApplicants\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Паокин\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\azale\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -66,7 +66,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     }
