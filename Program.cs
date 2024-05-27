@@ -41,12 +41,64 @@ internal class Program
         await HandleCallBackDataAsync(botClient, update, cancellationToken);
 
     }
+    private static async Task HandlePhotoAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        if (update == null || update.Message == null || update.Message.Photo == null)
+        {
+            return;
+        }
+        await DowloadPhoto(botClient, update, cancellationToken);
+    }
+    private static async Task DowloadPhoto(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        var fileId = update.Message!.Photo!.Last().FileId;
+        var fileInfo = await botClient.GetFileAsync(fileId);
+        var filePath = fileInfo.FilePath;
+
+        string url = @$"https://api.telegram.org/file/bot7019893449:AAGrmtY8rqgW2VtWbjRoHXAQW5bx-CBTTG8/{filePath}";
+        string newnamefile = $@"{Thread.CurrentThread.ManagedThreadId}{Path.GetFileName(filePath!)}";
+        string localpath = @$"Images\{newnamefile}";
+
+        using (var client = new HttpClient())
+        {
+            using (var s = client.GetStreamAsync(url))
+            {
+                using (var fs = new FileStream(localpath, FileMode.OpenOrCreate))
+                {
+                    s.Result.CopyTo(fs);
+                }
+            }
+        }
+
+        //TestContext testContext = new TestContext();
+        //InfoUser user = new InfoUser();
+        //user.Iduser = update.Message.Chat.Id;
+        //user.Name = update.Message.From!.FirstName;
+        //user.Image = System.IO.File.ReadAllBytes(localpath);
+        //testContext.InfoUsers.Add(user);
+        //await testContext.SaveChangesAsync();
+
+        System.IO.File.Delete(localpath);
+    }
     private static async Task HandleCallBackDataAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         if (update == null || update.CallbackQuery == null)
             return;
-
-        long chatId = update.CallbackQuery.Message!.Chat.Id;
+        await HandleCallBackDataUserAsync(botClient, update, cancellationToken);
+        await HandleCallBackDataAdminAsync(botClient, update, cancellationToken);
+    }
+    private static async Task HandleCallBackDataAdminAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        long chatId = update.CallbackQuery!.Message!.Chat.Id;
+        switch (update.CallbackQuery.Data)
+        {
+            case "start1":
+                break;
+        }
+    }
+    private static async Task HandleCallBackDataUserAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        long chatId = update.CallbackQuery!.Message!.Chat.Id;
         switch (update.CallbackQuery.Data)
         {
             case "start1":
@@ -81,7 +133,7 @@ internal class Program
                     text: "Как дела?",
                     cancellationToken: cancellationToken);
                 break;
-           
+
             case "level3_1":
                 await botClient.SendTextMessageAsync(
                      chatId: chatId,
@@ -116,6 +168,15 @@ internal class Program
         if (message.Text is not { } messageText)
             return;
 
+        await HandleMessagesUserAsync(botClient, update, cancellationToken);
+    }
+    private static async Task HandleMessagesAdminsAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+
+    }
+    private static async Task HandleMessagesUserAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        var message = update.Message!;
         var chatId = message.Chat.Id;
 
         if (message.Text == "/start")
@@ -188,10 +249,10 @@ internal class Program
                     "/off — Выключить подписку на бота\r\n" +
                     "/on — Включить подписку на бота\r\n" +
                     " \r\n" +
-                    "Выберите ниже раздел справки и получите краткую помощь. Если Ваш вопрос не решен, обратитесь за помощью к живому оператору @f1nessef1nesse_33 \r\n", 
+                    "Выберите ниже раздел справки и получите краткую помощь. Если Ваш вопрос не решен, обратитесь за помощью к живому оператору @f1nessef1nesse_33 \r\n",
                     cancellationToken: cancellationToken);
                 break;
-                
+
         }
     }
 

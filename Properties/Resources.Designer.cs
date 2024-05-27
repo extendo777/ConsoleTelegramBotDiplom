@@ -61,6 +61,15 @@ namespace ConsoleTelegramBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Data Source=АНТОН-ПК\FIERY;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;.
+        /// </summary>
+        internal static string DBConnection {
+            get {
+                return ResourceManager.GetString("DBConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на 6567190149:AAENEJ6_5IV39QqsP9OhbQfl-LBqLWHtb4s.
         /// </summary>
         internal static string Token {
