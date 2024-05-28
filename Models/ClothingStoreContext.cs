@@ -62,9 +62,7 @@ namespace ConsoleTelegramBot.Models
             {
                 entity.ToTable("Order");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.DeliveryAddress).HasMaxLength(120);
 
@@ -86,9 +84,7 @@ namespace ConsoleTelegramBot.Models
             {
                 entity.ToTable("OrderProduct");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
@@ -151,9 +147,7 @@ namespace ConsoleTelegramBot.Models
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Address).HasMaxLength(100);
 

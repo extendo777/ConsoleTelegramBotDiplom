@@ -70,16 +70,7 @@ namespace ConsoleTelegramBot.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 1.
-        /// </summary>
-        internal static string String1 {
-            get {
-                return ResourceManager.GetString("String1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на 6567190149:AAENEJ6_5IV39QqsP9OhbQfl-LBqLWHtb4s.
+        ///   Ищет локализованную строку, похожую на 7019893449:AAGrmtY8rqgW2VtWbjRoHXAQW5bx-CBTTG8.
         /// </summary>
         internal static string Token {
             get {
