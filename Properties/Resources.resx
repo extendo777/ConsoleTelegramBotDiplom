@@ -118,9 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DBConnection" xml:space="preserve">
-    <value>Data Source=АНТОН-ПК\FIERY;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;</value>
+    <value>Data Source=ARTEM;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;</value>
   </data>
   <data name="Token" xml:space="preserve">
-    <value>7019893449:AAGrmtY8rqgW2VtWbjRoHXAQW5bx-CBTTG8</value>
+    <value>6567190149:AAENEJ6_5IV39QqsP9OhbQfl-LBqLWHtb4s</value>
   </data>
 </root>

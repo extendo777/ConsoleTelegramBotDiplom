@@ -61,7 +61,7 @@ namespace ConsoleTelegramBot.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Data Source=АНТОН-ПК\FIERY;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;.
+        ///   Ищет локализованную строку, похожую на Data Source=ARTEM;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;.
         /// </summary>
         internal static string DBConnection {
             get {
@@ -70,7 +70,7 @@ namespace ConsoleTelegramBot.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 7019893449:AAGrmtY8rqgW2VtWbjRoHXAQW5bx-CBTTG8.
+        ///   Ищет локализованную строку, похожую на 6567190149:AAENEJ6_5IV39QqsP9OhbQfl-LBqLWHtb4s.
         /// </summary>
         internal static string Token {
             get {

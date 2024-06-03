@@ -1,4 +1,5 @@
 ﻿using ConsoleTelegramBot.Models;
+using System.IO;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
@@ -55,7 +56,7 @@ internal class Program
 
         string caption = update.Message!.Caption!;
         string id = caption.Replace("/UImage", "").Replace(" ", "");
-        if (user!= null && user.RoleId == 2 && caption.Contains("/UImage") && int.TryParse(id, out _))
+        if (user != null && user.RoleId == 2 && caption.Contains("/UImage") && int.TryParse(id, out _))
         {
             Product product = context.Products.FirstOrDefault(x => x.Id == int.Parse(id))!;
             if (product != null)
@@ -87,11 +88,16 @@ internal class Program
         }
 
         ClothingStoreContext context = new ClothingStoreContext();
-        Product product = context.Products.First(x=> x.Id == IdProduct);
+        Product product = context.Products.First(x => x.Id == IdProduct);
         product.Image = System.IO.File.ReadAllBytes(localpath);
         await context.SaveChangesAsync();
 
         System.IO.File.Delete(localpath);
+        await botClient.SendTextMessageAsync(
+                  chatId: update.Message.Chat.Id,
+                  text: "Фото установлено!",
+                  cancellationToken: cancellationToken);
+
     }
     private static async Task HandleCallBackDataAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
@@ -124,67 +130,334 @@ internal class Program
     }
     private static async Task HandleCallBackDataUserAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
+        ClothingStoreContext context = new ClothingStoreContext();
+        List<Brand> brands = context.Brands.ToList();
         long chatId = update.CallbackQuery!.Message!.Chat.Id;
         switch (update.CallbackQuery.Data)
         {
-            case "start1":
-                InlineKeyboardMarkup inlineKeyboard = new(new[]
+            case "ProductPants": //добавить такие же кнопки
+
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 8))
                 {
-                    new []
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
                     {
-                        InlineKeyboardButton.WithCallbackData(
-                            text: "Привет",
-                            callbackData: "level2_1"),
-                        InlineKeyboardButton.WithCallbackData(
-                            text: "пока",
-                            callbackData: "level2_2"),
-                    },
-                });
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductShoes":
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 1))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}"; //tak zhe
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ", //tak zhe
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductOuterwear": //добавить такие же кнопки
 
-                await botClient.SendTextMessageAsync(
-                     chatId: chatId,
-                     text: "Выберите",
-                     replyMarkup: inlineKeyboard,
-                     cancellationToken: cancellationToken);
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 2))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $"  \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
                 break;
-            case "start2":
-                await botClient.SendTextMessageAsync(
-                    chatId: chatId,
-                    text: "Как дела?",
-                    cancellationToken: cancellationToken);
-                break;
-            case "start3":
-                await botClient.SendTextMessageAsync(
-                    chatId: chatId,
-                    text: "Как дела?",
-                    cancellationToken: cancellationToken);
-                break;
+            case "ProductTshirt": //добавить такие же кнопки
 
-            case "level3_1":
-                await botClient.SendTextMessageAsync(
-                     chatId: chatId,
-                     text: "level3_1",
-                     cancellationToken: cancellationToken);
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 3))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
                 break;
-            case "level3_2":
-                await botClient.SendTextMessageAsync(
-                     chatId: chatId,
-                     text: "level3_2",
-                     cancellationToken: cancellationToken);
-                break;
-            case "level3_3":
-                await botClient.SendTextMessageAsync(
-                     chatId: chatId,
-                     text: "level3_3",
-                     cancellationToken: cancellationToken);
-                break;
-            default:
-                await botClient.SendTextMessageAsync(
-                     chatId: chatId,
-                     text: "Кнопка не обработана",
-                     cancellationToken: cancellationToken);
-                break;
+            case "ProductShirt": //добавить такие же кнопки
 
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 4))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductLongSleeve": //добавить такие же кнопки
+
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 5))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductAccessories": //добавить такие же кнопки
+
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 6))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductHat": //добавить такие же кнопки
+
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 7))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductShorts": //добавить такие же кнопки
+
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 9))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductSocks": //добавить такие же кнопки
+
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 10))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductHoodie": //добавить такие же кнопки
+
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 11))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
+            case "ProductUnderwear": //добавить такие же кнопки
+
+                foreach (var prod in context.Products.Where(x => x.CategoryId == 12))
+                {
+                    string brand = brands.First(x => x.Id == prod.BrandId).Brand1!;
+                    string text = $" \n Бренд: {brand}\n Размер: {prod.Size}\n Цвет: {prod.Color}";
+                    if (prod.Image == null)
+                    {
+                        await botClient.SendPhotoAsync(
+                        chatId: chatId,
+                           photo: InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg"),
+                           caption: @$"<b> {prod.Title} </b> {text} ",
+                           parseMode: ParseMode.Html,
+                           cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        Stream stream = new MemoryStream(prod.Image!);
+                        await botClient.SendPhotoAsync(
+                         chatId: chatId,
+                         photo: InputFile.FromStream(stream),
+                         caption: @$"<b> {prod.Title} </b> {text} ",
+                         parseMode: ParseMode.Html,
+                         cancellationToken: cancellationToken);
+                    }
+                }
+                break;
         }
     }
     private static async Task HandleMessagesAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -216,6 +489,7 @@ internal class Program
         switch (message.Text)
         {
             case "/start":
+
                 await botClient.SendTextMessageAsync(
                   chatId: chatId,
                   text: "/start - для вывода команд\n" +
@@ -223,7 +497,7 @@ internal class Program
                   "Полей - ID, Title, Price, Size, Color\n" +
                   "/all_product2 - для вывода товаров\n" +
                   "Полей - ID, Title, Brand, Categories, Image\n" +
-                  "Для изминения (добавления) картинки у продукта отправьте картинку и в комметарии (подписи) к ней напишите\n" +
+                  "Для изменения (добавления) картинки у продукта отправьте картинку и в комментарии (подписи) к ней напишите\n" + 
                   "/UImage _IDПродукта - например /UImage 16",
                   replyMarkup: new ReplyKeyboardRemove(),
                   cancellationToken: cancellationToken);
@@ -250,7 +524,7 @@ internal class Program
                 {
                     string image = item.Image != null ? "да" : "нет";
                     string brand = brands.First(x => x.Id == item.BrandId).Brand1!;
-                    string category = categories.First(x => x.Id == item.CategoryId).Title!;;
+                    string category = categories.First(x => x.Id == item.CategoryId).Title!; ;
                     text += $"{item.Id} |\t{item.Title} |\t{brand} |\t{category} |\t{image} \n";
                 }
                 await botClient.SendTextMessageAsync(
@@ -307,27 +581,54 @@ internal class Program
                 InlineKeyboardMarkup inlineKeyboard = new(new[]
                 {
                     new []
-                    {
+                    {                                            
+                       
                         InlineKeyboardButton.WithCallbackData(
-                            text: "Джинсы",
-                            callbackData: "start1"),
-                        InlineKeyboardButton.WithCallbackData(
-                            text: "Футболки",
-                            callbackData: "start2"),
-                    },
-                    new []
-                    {
-                        InlineKeyboardButton.WithCallbackData(
-                            text: "Кроссовки",
-                            callbackData: "start3"),
-                    },
-                    new []
-                    {
+                            text: "Лонгсливы",
+                            callbackData: "ProductLongSleeve"),
                         InlineKeyboardButton.WithCallbackData(
                             text: "Аксессуары",
-                            callbackData: "start4"),
+                            callbackData: "ProductAccessories"),
+                    },
+                    new []
+                    {
                         InlineKeyboardButton.WithCallbackData(
-                            text: "Сумки",
+                            text: "Верхняя одежда",
+                            callbackData: "ProductOuterwear"),
+                         InlineKeyboardButton.WithCallbackData( 
+                            text: "Футболки",
+                            callbackData: "ProductTshirt"),
+                    },
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Обувь",
+                            callbackData: "ProductShoes"),
+
+                    },
+                    new []
+                    {
+                       InlineKeyboardButton.WithCallbackData(
+                            text: "Головные уборы",
+                            callbackData: "ProductHat"),
+                       InlineKeyboardButton.WithCallbackData(
+                            text: "Брюки",
+                            callbackData: "ProductPants"),
+                       InlineKeyboardButton.WithCallbackData(
+                            text: "Шорты",
+                            callbackData: "ProductShorts"),
+                    },
+                    new []
+                    {
+                        
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Носки",
+                            callbackData: "ProductSocks"),
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Худи",
+                            callbackData: "ProductHoodie"),
+                        InlineKeyboardButton.WithCallbackData(
+                            text: "Белье",
                             callbackData: "start5"),
                     },
                 });
@@ -357,6 +658,7 @@ internal class Program
                     "Выберите ниже раздел справки и получите краткую помощь. Если Ваш вопрос не решен, обратитесь за помощью к живому оператору @f1nessef1nesse_33 \r\n",
                     cancellationToken: cancellationToken);
                 break;
+
 
         }
     }
