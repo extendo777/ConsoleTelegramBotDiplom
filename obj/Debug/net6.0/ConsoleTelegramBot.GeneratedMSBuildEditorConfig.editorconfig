@@ -8,6 +8,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ConsoleTelegramBot
-build_property.ProjectDir = C:\Users\azale\Documents\GitHub\ConsoleTelegramBotDiplom\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.ProjectDir = C:\Users\323\Documents\GitHub\ConsoleTelegramBotDiplom\

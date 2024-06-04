@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DBConnection" xml:space="preserve">
-    <value>Data Source=ARTEM;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;</value>
+    <value>Data Source=.\SQLEXPRESS;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;</value>
   </data>
   <data name="Token" xml:space="preserve">
     <value>6567190149:AAENEJ6_5IV39QqsP9OhbQfl-LBqLWHtb4s</value>

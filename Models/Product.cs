@@ -7,6 +7,7 @@ namespace ConsoleTelegramBot.Models
     {
         public Product()
         {
+            Carts = new HashSet<Cart>();
             OrderProducts = new HashSet<OrderProduct>();
         }
 
@@ -21,6 +22,7 @@ namespace ConsoleTelegramBot.Models
 
         public virtual Brand? Brand { get; set; }
         public virtual Category? Category { get; set; }
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }

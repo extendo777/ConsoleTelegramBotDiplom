@@ -17,6 +17,7 @@ namespace ConsoleTelegramBot.Models
         }
 
         public virtual DbSet<Brand> Brands { get; set; } = null!;
+        public virtual DbSet<Cart> Carts { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderProduct> OrderProducts { get; set; } = null!;
@@ -45,6 +46,29 @@ namespace ConsoleTelegramBot.Models
                 entity.Property(e => e.Brand1)
                     .HasMaxLength(100)
                     .HasColumnName("Brand");
+            });
+
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.ToTable("Cart");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Carts)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Cart_Product");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Carts)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Cart_User");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -158,6 +182,8 @@ namespace ConsoleTelegramBot.Models
                     .IsFixedLength();
 
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
+
+                entity.Property(e => e.UserName).HasMaxLength(70);
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)

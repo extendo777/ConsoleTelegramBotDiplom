@@ -61,7 +61,7 @@ namespace ConsoleTelegramBot.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Data Source=ARTEM;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;.
+        ///   Ищет локализованную строку, похожую на Data Source=.\SQLEXPRESS;Initial Catalog=ClothingStore;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;.
         /// </summary>
         internal static string DBConnection {
             get {
