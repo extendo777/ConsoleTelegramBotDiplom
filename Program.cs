@@ -120,15 +120,7 @@ internal class Program
     private static async Task HandleCallBackDataAdminAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
         long chatId = update.CallbackQuery!.Message!.Chat.Id;
-        switch (update.CallbackQuery.Data)
-        {
-            case "start1":
-                await botClient.SendTextMessageAsync(
-                  chatId: chatId,
-                  text: "text",
-                  cancellationToken: cancellationToken);
-                break;
-        }
+
     }
     private static async Task HandleCallBackDataUserAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
@@ -137,37 +129,37 @@ internal class Program
         long chatId = update.CallbackQuery!.Message!.Chat.Id;
         switch (update.CallbackQuery.Data)
         {
-            case "ProductPants": //добавить такие же кнопки
+            case "ProductPants":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 8).ToList(), cancellationToken);
                 break;
             case "ProductShoes":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 1).ToList(), cancellationToken);
                 break;
-            case "ProductOuterwear": //добавить такие же кнопки
+            case "ProductOuterwear":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 2).ToList(), cancellationToken);
                 break;
-            case "ProductTshirt": //добавить такие же кнопки
+            case "ProductTshirt":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 3).ToList(), cancellationToken);
                 break;
-            case "ProductShirt": //добавить такие же кнопки
+            case "ProductShirt":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 4).ToList(), cancellationToken);
                 break;
-            case "ProductLongSleeve": //добавить такие же кнопки
+            case "ProductLongSleeve":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 5).ToList(), cancellationToken);
                 break;
-            case "ProductAccessories": //добавить такие же кнопки
+            case "ProductAccessories":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 6).ToList(), cancellationToken);
                 break;
-            case "ProductHat": //добавить такие же кнопки
+            case "ProductHat":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 7).ToList(), cancellationToken);
                 break;
-            case "ProductShorts": //добавить такие же кнопки
+            case "ProductShorts":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 9).ToList(), cancellationToken);
                 break;
-            case "ProductSocks": //добавить такие же кнопки
+            case "ProductSocks":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 10).ToList(), cancellationToken);
                 break;
-            case "ProductHoodie": //добавить такие же кнопки
+            case "ProductHoodie":
                 await SelectProductUserAsync(botClient, update, context.Products.Where(x => x.CategoryId == 11).ToList(), cancellationToken);
                 break;
         }
@@ -187,7 +179,7 @@ internal class Program
             ConsoleTelegramBot.Models.User user = context.Users.FirstOrDefault(x => x.TelegramId == chatId)!;
             foreach (var item in context.Users.Where(x => x.RoleId == 2))
             {
-               
+
                 await botClient.SendTextMessageAsync(
                    chatId: item.TelegramId!,
                    text: $"Пользователь {user.Id} {user.FullName} @{user.UserName} Хочет купить товар",
@@ -206,6 +198,17 @@ internal class Program
             await botClient.SendTextMessageAsync(
                   chatId: chatId,
                   text: "Ваш заказ добавлен в корзину",
+                  cancellationToken: cancellationToken);
+        }
+        else if (update.CallbackQuery.Data!.Contains("DeleteCart"))
+        {
+            int id = int.Parse(update.CallbackQuery.Data.Replace("DeleteCart", ""));
+            Cart cart = context.Carts.FirstOrDefault(x => x.Id == id)!;
+            context.Carts.Remove(cart);
+            await context.SaveChangesAsync();
+            await botClient.SendTextMessageAsync(
+                  chatId: chatId,
+                  text: "Ваш заказ удалён из корзину",
                   cancellationToken: cancellationToken);
         }
     }
@@ -231,7 +234,7 @@ internal class Program
             }
 
             InlineKeyboardMarkup inlineKeyboard = new(new[]
-{
+            {
                     new []
                     {
                         InlineKeyboardButton.WithCallbackData(
@@ -241,7 +244,6 @@ internal class Program
                             text: "Купить",
                             callbackData: $"ToBuy{prod.Id}")
                     },
-
             });
 
             await botClient.SendPhotoAsync(
@@ -328,7 +330,7 @@ internal class Program
                     cancellationToken: cancellationToken);
                 break;
         }
-        if (message.Text.Contains("/Cart "))
+        if (message.Text!.Contains("/Cart "))
         {
             if (int.TryParse(message.Text.Replace("/Cart ", ""), out int userid))
             {
@@ -337,7 +339,7 @@ internal class Program
                 List<Product> products = context.Products.ToList();
                 text = $"Вывод корзины пользователя\n" +
                           $"ID |\tUserName |\tIDProd|\tNameProd \n";
-                foreach (var item in context.Carts.Where(x=>x.UserId == userid))
+                foreach (var item in context.Carts.Where(x => x.UserId == userid))
                 {
                     string username = users.FirstOrDefault(x => x.Id == userid)!.UserName!;
                     string product = products.FirstOrDefault(x => x.Id == item.ProductId)!.Title!;
@@ -392,7 +394,7 @@ internal class Program
             {
                 ResizeKeyboard = true
             };
-           
+
             await botClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: "Выберите действие",
@@ -402,9 +404,41 @@ internal class Program
         }
         switch (message.Text)
         {
+            case "/catalog":
+                await SelectCatalogAsync(botClient, update, cancellationToken);
+                break;
             case "📂Каталог":
-                InlineKeyboardMarkup inlineKeyboard = new(new[]
-                {
+                await SelectCatalogAsync(botClient, update, cancellationToken);
+                break;
+            case "/cart":
+                await SelecCartAsync(botClient, update, cancellationToken);
+                break;
+            case "🛍Корзина":
+                await SelecCartAsync(botClient, update, cancellationToken);
+                break;
+            case "❓Помощь":
+                await botClient.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: "Список команд:\n" +
+                    "/catalog - Каталог\n" +
+                    "/cart — Корзина\n" +
+                    "/start — Главное меню\r\n" +
+                    " \r\n" +
+                    "Выберите ниже раздел справки и получите краткую помощь. Если Ваш вопрос не решен, обратитесь за помощью к живому оператору @f1nessef1nesse_33 \r\n",
+                    cancellationToken: cancellationToken);
+                break;
+
+
+        }
+    }
+
+    private static async Task SelectCatalogAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        var message = update.Message!;
+        var chatId = message.Chat.Id;
+        ClothingStoreContext context = new ClothingStoreContext();
+        InlineKeyboardMarkup inlineKeyboard = new(new[]
+{
                     new []
                     {
 
@@ -458,33 +492,65 @@ internal class Program
                     },
                 });
 
-                await botClient.SendTextMessageAsync(
-                     chatId: chatId,
-                     text: "Выберите раздел, чтобы вывести список товаров:",
-                     replyMarkup: inlineKeyboard,
-                     cancellationToken: cancellationToken);
+        await botClient.SendTextMessageAsync(
+             chatId: chatId,
+             text: "Выберите раздел, чтобы вывести список товаров:",
+             replyMarkup: inlineKeyboard,
+             cancellationToken: cancellationToken);
+    }
+    private static async Task SelecCartAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        var message = update.Message!;
+        var chatId = message.Chat.Id;
+        ClothingStoreContext context = new ClothingStoreContext();
+        ConsoleTelegramBot.Models.User selectuser = context.Users.FirstOrDefault(x => x.TelegramId == chatId)!;
+        List<Product> products = context.Products.ToList();
+        List<Brand> brands = context.Brands.ToList();
+        List<Category> categories = context.Categories.ToList();
 
-                break;
-            case "❓Помощь":
-                await botClient.SendTextMessageAsync(
-                    chatId: chatId,
-                    text: "Список команд:\n" +
-                    "/catalog - Каталог\n" +
-                    "/cart — Корзина\n" +
-                    "/history — История заказов\n" +
-                    "/news — Наши новости и акции\n" +
-                    "/settings — Настройки\r\n" +
-                    "/help — Справка\r\n" +
-                    "/about — О проекте\r\n" +
-                    "/start — Главное меню\r\n" +
-                    "/off — Выключить подписку на бота\r\n" +
-                    "/on — Включить подписку на бота\r\n" +
-                    " \r\n" +
-                    "Выберите ниже раздел справки и получите краткую помощь. Если Ваш вопрос не решен, обратитесь за помощью к живому оператору @f1nessef1nesse_33 \r\n",
-                    cancellationToken: cancellationToken);
-                break;
+        string text = context.Carts.Where(x => x.Id == selectuser.Id).Count() == 0 ?
+            "Ваша корзина пуста\n" : $"Корзина:\n";
+        await botClient.SendTextMessageAsync(
+            chatId: chatId,
+            text: text,
+            cancellationToken: cancellationToken);
+        int i = 0;
+        foreach (var item in context.Carts.Where(x => x.UserId == selectuser.Id))
+        {
+            i++;
+            Product product = products.FirstOrDefault(x => x.Id == item.ProductId)!;
+            Brand brand = brands.FirstOrDefault(x => x.Id == product.BrandId)!;
+            Category category = categories.FirstOrDefault(x => x.Id == product.CategoryId)!;
 
+            string selecttext = $" \n Бренд: {brand.Brand1}\n Размер: {product.Size}\n Цена: {product.Price} ";
+            InputFile input;
+            if (product.Image == null)
+            {
+                input = InputFile.FromUri("https://raw.githubusercontent.com/extendo777/Images/main/NoImage.jpg");
+            }
+            else
+            {
+                Stream stream = new MemoryStream(product.Image!);
+                input = InputFile.FromStream(stream);
+            }
 
+            InlineKeyboardMarkup inlineKeyboardButtons = new(new[]
+            {
+                        new []
+                        {
+                            InlineKeyboardButton.WithCallbackData(
+                                text: "Удалить",
+                                callbackData: $"DeleteCart{item.Id}"),
+                        },
+                    });
+
+            await botClient.SendPhotoAsync(
+               chatId: chatId,
+               photo: input,
+               caption: @$"<b>{i}. {product.Title} </b> {selecttext} ",
+               parseMode: ParseMode.Html,
+               replyMarkup: inlineKeyboardButtons,
+               cancellationToken: cancellationToken);
         }
     }
 
